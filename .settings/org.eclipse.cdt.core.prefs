@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+environment/project/0.945714313/NDKROOT/delimiter=\:
+environment/project/0.945714313/NDKROOT/operation=replace
+environment/project/0.945714313/NDKROOT/value=/home/rohit/android/android-ndk-r8d
+environment/project/0.945714313/append=true
+environment/project/0.945714313/appendContributed=true
+environment/project/com.android.toolchain.gcc.1031842366/append=true
+environment/project/com.android.toolchain.gcc.1031842366/appendContributed=true
