@@ -8,7 +8,7 @@ import org.opencv.core.Point;
  * This class implements JAVA interface to C++ functions
  */
 public class Util {
-	public static Point mapPoint(Mat H, Point P) {
+	public static Point getPointOnOrig(Mat H, Point P) {
 		Mat temp = new Mat(1, 2, CvType.CV_64FC1);
 		temp.put(0,0,P.x); temp.put(0,1,P.y);
 		mapPoint(H.getNativeObjAddr(), temp.getNativeObjAddr());

@@ -9,8 +9,8 @@ public class ImageMatcher {
 	private final static String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
 	
 	public static Mat match(Mat given) {
-		// FOR NOW, simply return a standard image
-		Mat res = Highgui.imread(SD_CARD_PATH + "/BookAlive/" + "orig.jpg");
+		// TODO : FOR NOW, simply return a standard image
+		Mat res = Highgui.imread(SD_CARD_PATH + "/Pictures/BookAlive/" + "act.jpg");
 		return res;
 	}
 }

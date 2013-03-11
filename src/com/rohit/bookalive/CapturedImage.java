@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 
 import android.content.Context;
@@ -15,32 +18,55 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class CapturedImage {
 	private Mat 	image;
 	private Mat 	orig;	// the original db image of the same page
 	private Mat		H;		// homography matrix orig to image
 	private final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
-	private final String STOR_PATH 	= SD_CARD_PATH + "/Pictures/BookAlive/" + "test.jpg";
+	private String STOR_PATH 	= SD_CARD_PATH + "/Pictures/BookAlive/" + "test.jpg";
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
+	private boolean asking = false;		// True when asking the question for this image
 	
 	public Intent createCaptureIntent(Context context) {
 		File photo = new File(STOR_PATH); photo.delete();
 		Uri photoUri = Uri.fromFile(photo);
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		captureIntent.putExtra(CameraActivity.OUTPUT_FNAME, photoUri);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		return captureIntent;
 	}
 	
-	public void processIntentResult(Intent data) {
+	public void processIntentResult() {
 		image = Highgui.imread(STOR_PATH);
 		orig = ImageMatcher.match(image);
 		H = new Mat();
+	}
+	
+	public void processDev() {
+		// TODO : Remove this function, only for development as a replacement for processIntentResult
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test1.jpg";
+		processIntentResult();
+	}
+	
+	public void drawLine() {
+		// TODO : temporary func, only for testing
+		Log.i(TAG + " H", Double.toString(H.get(0,0)[0]) + " " + Double.toString(H.get(0,1)[0]));
+		Point p = new Point(10,10), p2 = new Point(10,1000);
+		Core.line(image, p, p2, new Scalar(0,255,0),10);
+		p = Util.getPointOnOrig(H, p);
+		p2 = Util.getPointOnOrig(H, p2);
+		Log.i(TAG, Double.toString(p.x)+ " " + Double.toString(p.y)); 
+		Log.i(TAG, Double.toString(p2.x)+ " " + Double.toString(p2.y)); 
+		Core.line(image, p, p2, new Scalar(255,0,0),10);
 	}
 	
 	public void processHomography() {
@@ -51,7 +77,23 @@ public class CapturedImage {
 		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(image, bmp);
 		mImageView.setImageBitmap(bmp);
-		Log.v(TAG, "here");
+	}
+	
+	public void ask() {
+		/* Function to ask the question for this image */
+		// TODO For now, just Question Type 1 and asks
+		asking = true;
+		
+		asking = false;
+	}
+	
+	public void getTouch(Context context, float x, float y) {
+		/* Function to handle touch input to image */
+		Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
+		t.show();
+		if(asking) {
+			
+		}		
 	}
 	
 	private void correctOrientation() {
