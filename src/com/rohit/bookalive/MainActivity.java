@@ -62,11 +62,9 @@ public class MainActivity extends Activity {
 	}
 	
 	private void askQuestion() {
-		img.ask();
-		Toast t = Toast.makeText(getApplicationContext(), "This is the question", Toast.LENGTH_LONG);
-		t.show();
-		img.drawLine();
-		img.setImageView(mImageView);
+		img.ask(getApplicationContext());
+		//img.drawLine();
+		//img.setImageView(mImageView);
 	}
 	
 	private class ComputeHomographyTask extends AsyncTask<Void, Void, Void> {

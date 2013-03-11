@@ -1,18 +1,15 @@
 package com.rohit.bookalive;
 
-import org.opencv.core.Mat;
-
 public class RegionOfInterest {
 	private String name;
 	private Polygon P;
-	Mat H;
 	
-	public RegionOfInterest(String nm, Polygon poly, Mat homo) {
-		name = nm; P = poly; H = homo;
+	public RegionOfInterest(String nm, Polygon poly) {
+		name = nm; P = poly;
 	}
 	
-	public boolean selected(String key, double x, double y) {
-		if(name.equals(key) && P.contains(x, y)) {
+	public boolean hit(double x, double y) {
+		if(P.contains(x, y)) {
 			return true;
 		} else return false;
 	}

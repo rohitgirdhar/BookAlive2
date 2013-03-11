@@ -30,12 +30,14 @@ import android.widget.Toast;
 public class CapturedImage {
 	private Mat 	image;
 	private Mat 	orig;	// the original db image of the same page
-	private Mat		H;		// homography matrix orig to image
+	private Mat		H;		// homography matrix orig to image, i.e. Hx will give pt on original image
 	private final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
 	private String STOR_PATH 	= SD_CARD_PATH + "/Pictures/BookAlive/" + "test.jpg";
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
 	private boolean asking = false;		// True when asking the question for this image
+	
+	private Question_Type1 q = new Question_Type1();
 	
 	public Intent createCaptureIntent(Context context) {
 		File photo = new File(STOR_PATH); photo.delete();
@@ -62,15 +64,15 @@ public class CapturedImage {
 		Log.i(TAG + " H", Double.toString(H.get(0,0)[0]) + " " + Double.toString(H.get(0,1)[0]));
 		Point p = new Point(10,10), p2 = new Point(10,1000);
 		Core.line(image, p, p2, new Scalar(0,255,0),10);
-		p = Util.getPointOnOrig(H, p);
-		p2 = Util.getPointOnOrig(H, p2);
+		p = Util.getPointOnOrig(H.inv(), p);
+		p2 = Util.getPointOnOrig(H.inv(), p2);
 		Log.i(TAG, Double.toString(p.x)+ " " + Double.toString(p.y)); 
 		Log.i(TAG, Double.toString(p2.x)+ " " + Double.toString(p2.y)); 
 		Core.line(image, p, p2, new Scalar(255,0,0),10);
 	}
 	
 	public void processHomography() {
-		computeHomography(orig.getNativeObjAddr(), image.getNativeObjAddr(), H.getNativeObjAddr());
+		computeHomography(image.getNativeObjAddr(), orig.getNativeObjAddr(), H.getNativeObjAddr());
 	}
 	
 	public void setImageView(ImageView mImageView) {
@@ -79,21 +81,23 @@ public class CapturedImage {
 		mImageView.setImageBitmap(bmp);
 	}
 	
-	public void ask() {
+	public void ask(Context context) {
 		/* Function to ask the question for this image */
 		// TODO For now, just Question Type 1 and asks
 		asking = true;
-		
-		asking = false;
+		q.ask(context);
 	}
 	
 	public void getTouch(Context context, float x, float y) {
 		/* Function to handle touch input to image */
-		Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
-		t.show();
-		if(asking) {
-			
-		}		
+		//Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
+		//t.show();
+		//if(asking) {
+			q.clicked(x, y);
+			if(q.checkDone()) {
+				asking = false;
+			}
+		//}
 	}
 	
 	private void correctOrientation() {
