@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+
 public class CapturedImage {
 	private Mat 	image;
 	private Mat 	orig;	// the original db image of the same page
@@ -36,6 +37,7 @@ public class CapturedImage {
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
 	private boolean asking = false;		// True when asking the question for this image
+	ImageView imageView = null; 			// storing, to use later to find size ratios for clicks
 	
 	private Question_Type1 q = new Question_Type1();
 	
@@ -51,34 +53,41 @@ public class CapturedImage {
 		image = Highgui.imread(STOR_PATH);
 		orig = ImageMatcher.match(image);
 		H = new Mat();
+		q.read();
+	}
+	
+	public void drawTemp() {
+		// TODO remove this fun
+		q.draw(this);
 	}
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test1.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test4.jpg";
 		processIntentResult();
 	}
 	
-	public void drawLine() {
+	public void drawLine(double x1, double y1, double x2, double y2) {
 		// TODO : temporary func, only for testing
 		Log.i(TAG + " H", Double.toString(H.get(0,0)[0]) + " " + Double.toString(H.get(0,1)[0]));
-		Point p = new Point(10,10), p2 = new Point(10,1000);
-		Core.line(image, p, p2, new Scalar(0,255,0),10);
+		Point p = new Point(x1,y1), p2 = new Point(x2,y2);
+		//Core.line(image, p, p2, new Scalar(0,255,0),3);
 		p = Util.getPointOnOrig(H.inv(), p);
 		p2 = Util.getPointOnOrig(H.inv(), p2);
 		Log.i(TAG, Double.toString(p.x)+ " " + Double.toString(p.y)); 
 		Log.i(TAG, Double.toString(p2.x)+ " " + Double.toString(p2.y)); 
-		Core.line(image, p, p2, new Scalar(255,0,0),10);
-	}
+		Core.line(image, p, p2, new Scalar(255,0,0),3);
+	}	
 	
 	public void processHomography() {
 		computeHomography(image.getNativeObjAddr(), orig.getNativeObjAddr(), H.getNativeObjAddr());
 	}
 	
 	public void setImageView(ImageView mImageView) {
+		imageView = mImageView;
 		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(image, bmp);
-		mImageView.setImageBitmap(bmp);
+		imageView.setImageBitmap(bmp);
 	}
 	
 	public void ask(Context context) {
@@ -88,16 +97,34 @@ public class CapturedImage {
 		q.ask(context);
 	}
 	
+	private Point mapPointToOrig(Point p) {
+		double vht = imageView.getHeight();
+		double vwd = imageView.getWidth();
+		double iht = image.rows();
+		double iwd = image.cols();
+		p.x = (iwd/vwd)*p.x;
+		p.y = (iht/vht)*p.y;
+		p = Util.getPointOnOrig(H, p);
+		return p;
+	}
+	
 	public void getTouch(Context context, float x, float y) {
 		/* Function to handle touch input to image */
 		//Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
 		//t.show();
-		//if(asking) {
-			q.clicked(x, y);
+		if(asking) {
+			Point p = new Point(x,y);
+			p = mapPointToOrig(p);
+			q.clicked(p.x, p.y);
 			if(q.checkDone()) {
 				asking = false;
+				showTip(context);
 			}
-		//}
+		}
+	}
+	
+	private void showTip(Context context) {
+		q.showTip(context);
 	}
 	
 	private void correctOrientation() {

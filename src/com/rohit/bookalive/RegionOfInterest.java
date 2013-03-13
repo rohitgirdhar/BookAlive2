@@ -2,7 +2,8 @@ package com.rohit.bookalive;
 
 public class RegionOfInterest {
 	private String name;
-	private Polygon P;
+	// TODO make private after draw in QT1
+	public Polygon P;
 	
 	public RegionOfInterest(String nm, Polygon poly) {
 		name = nm; P = poly;

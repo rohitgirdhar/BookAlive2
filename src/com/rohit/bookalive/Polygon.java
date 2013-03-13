@@ -1,8 +1,11 @@
 package com.rohit.bookalive;
 
+import android.util.Log;
+
 public class Polygon {
 	// Polygon coodinates.
-    private int[] polyY, polyX;
+	// TODO  make private after draw in QT1
+    public double[] polyY, polyX;
 
     // Number of sides in the polygon.
     private int polySides;
@@ -13,7 +16,7 @@ public class Polygon {
      * @param py Polygon y coods.
      * @param ps Polygon sides count.
      */
-    public Polygon( int[] px, int[] py, int ps )
+    public Polygon(  double[] px, double[] py, int ps )
     {
         polyX = px;
         polyY = py;

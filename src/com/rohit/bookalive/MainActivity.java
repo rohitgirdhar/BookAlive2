@@ -1,6 +1,7 @@
 package com.rohit.bookalive;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
@@ -18,17 +18,18 @@ public class MainActivity extends Activity {
 	private CapturedImage img;
 	private final int CAPTURE_INTENT = 1;
 	private ImageView mImageView;
+	Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mImageView = (ImageView) findViewById(R.id.imageViewMain);
-		
+		context = this;
 		OnTouchListener l = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				img.getTouch(getApplicationContext(), event.getX(), event.getY());
+				img.getTouch(context, event.getX(), event.getY());
 				return true;
 			}
 		};
@@ -62,9 +63,13 @@ public class MainActivity extends Activity {
 	}
 	
 	private void askQuestion() {
-		img.ask(getApplicationContext());
-		//img.drawLine();
-		//img.setImageView(mImageView);
+		img.ask(this);
+		img.drawTemp();
+		//img.drawLine(121, 221, 133, 186);
+		//img.drawLine(171, 189, 133, 186);
+		//img.drawLine(171, 189, 168, 224);
+		//img.drawLine(121, 221, 168, 224);
+		img.setImageView(mImageView);
 	}
 	
 	private class ComputeHomographyTask extends AsyncTask<Void, Void, Void> {

@@ -106,7 +106,7 @@ Mat getHomography(Mat orig, Mat test) {
 }
 
 void setSize(Mat orig1, Mat test1, Mat& orig, Mat& test) {
-	double facX = 0.25, facY = 0.25;
+	double facX = 0.75, facY = 0.75;
 	resize(orig1, orig, Size(0,0), facX, facY);
 	resize(test1, test, Size(0,0), facX, facY);
 	cvtColor(orig, orig, CV_BGR2GRAY);
