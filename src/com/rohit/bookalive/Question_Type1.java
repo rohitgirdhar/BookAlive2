@@ -20,26 +20,25 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-public class Question_Type1 {
+public class Question_Type1 extends Question {
 	private List<RegionOfInterest> rois = new ArrayList<RegionOfInterest>();
 	private boolean[] done;
 	private int countMatch = 0;
-	Context context;
 	final static String TAG = "Question_Type1";
-	private String tipText = ""; 
-	private String qsText = "";
 	
 	public void read() {
 		/* Reads the question from file */
-		
+		Log.v(TAG, qfname);
 		try {
-			File f = new File("/mnt/sdcard/Pictures/BookAlive/qt1_img1.xml");
+			File f = new File(qfname);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(f);
 			doc.getDocumentElement().normalize();
 			
-			NodeList roiList = doc.getElementsByTagName("roi");
+			Log.v(TAG,doc.getDocumentElement().getNodeName());
+			Element objects = (Element) doc.getElementsByTagName("objects").item(0);
+			NodeList roiList = objects.getElementsByTagName("roi");
 			
 			
 			for(int i=0; i<roiList.getLength(); i++) {
@@ -62,9 +61,6 @@ public class Question_Type1 {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// TODO :  remove hard codes
-		tipText = "This is the tip text";
-		qsText = "This is the question";
 		done = new boolean[rois.size()];
 		for(int i=0; i<rois.size(); i++) done[i] = false;
 		
@@ -80,20 +76,7 @@ public class Question_Type1 {
 		}
 	}
 	
-	public void ask(Context context) {
-		this.context = context;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(qsText)
-		.setCancelable(false)
-		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				//do things
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-	
+		
 	public void clicked(double x, double y) {
 		//show("CLicked at: " + Double.toString(x) + " " + Double.toString(y));
 		for(int i=0; i<rois.size(); i++) {
@@ -125,18 +108,5 @@ public class Question_Type1 {
 	public boolean checkDone() {
 		if(countMatch == rois.size()) return true;
 		else return false;
-	}
-	
-	public void showTip(Context context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(tipText)
-		.setCancelable(false)
-		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				//do things
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
 	}
 };

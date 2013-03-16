@@ -33,13 +33,17 @@ public class CapturedImage {
 	private Mat 	orig;	// the original db image of the same page
 	private Mat		H;		// homography matrix orig to image, i.e. Hx will give pt on original image
 	private final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
-	private String STOR_PATH 	= SD_CARD_PATH + "/Pictures/BookAlive/" + "test.jpg";
+	private final String ROOT_PATH = SD_CARD_PATH + "/Pictures/BookAlive/";
+	private String STOR_PATH 	= ROOT_PATH + "test.jpg";
+	private final String PAGES_STOR = ROOT_PATH + "Pages/";
+	private final String QS_STOR = ROOT_PATH + "Ques/";
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
 	private boolean asking = false;		// True when asking the question for this image
 	ImageView imageView = null; 			// storing, to use later to find size ratios for clicks
+	private int matchingPage = 1;
 	
-	private Question_Type1 q = new Question_Type1();
+	private Question q = new Question_Type1();
 	
 	public Intent createCaptureIntent(Context context) {
 		File photo = new File(STOR_PATH); photo.delete();
@@ -48,12 +52,26 @@ public class CapturedImage {
 		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 		return captureIntent;
 	}
-	
+		
 	public void processIntentResult() {
 		image = Highgui.imread(STOR_PATH);
-		orig = ImageMatcher.match(image);
+		matchingPage = ImageMatcher.match(image);
+		readPageImage();
 		H = new Mat();
-		q.read();
+		getQuestion();
+	}
+	
+	private void readPageImage() {
+		String fname = Integer.toString(matchingPage) + ".jpg";
+		String path = PAGES_STOR + fname;
+		orig = Highgui.imread(path);
+	}
+	
+
+	private void getQuestion() {
+		// get the question type, make object, from the meta file
+		String fname = QS_STOR + Integer.toString(matchingPage) + ".xml";
+		q = q.readType(fname);
 	}
 	
 	public void drawTemp() {
@@ -63,7 +81,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test4.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test1.jpg";
 		processIntentResult();
 	}
 	
