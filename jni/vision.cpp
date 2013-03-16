@@ -6,6 +6,7 @@
 #include "opencv2/calib3d/calib3d.hpp"
 #include <vector>
 #include <android/log.h>
+#include <sstream>
 
 #define APPNAME "BookAlive"
 using namespace cv;
@@ -15,8 +16,8 @@ extern "C" {
 
 Mat findHomography(Mat orig, Mat test) {
     vector<KeyPoint> kp_orig, kp_test;
-    FAST(orig, kp_orig, 10);
-    FAST(test, kp_test, 10);
+    FAST(orig, kp_orig, 80);
+    FAST(test, kp_test, 80);
     FREAK ext;
     Mat desc_orig, desc_test;
     ext.compute(orig, kp_orig, desc_orig);
