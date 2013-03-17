@@ -13,7 +13,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 public abstract class Question {
@@ -111,6 +111,6 @@ public abstract class Question {
 	
 	abstract public void read();
 	abstract public void draw();
-	abstract public void clicked(double x, double y);
+	abstract public void clicked(double x, double y, MotionEvent event);
 	abstract public boolean checkDone();
 }

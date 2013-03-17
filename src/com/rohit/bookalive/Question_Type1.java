@@ -12,12 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.MotionEvent;
 
 
 public class Question_Type1 extends Question {
@@ -76,15 +72,17 @@ public class Question_Type1 extends Question {
 	}
 	
 		
-	public void clicked(double x, double y) {
+	public void clicked(double x, double y, MotionEvent event) {
 		//show("CLicked at: " + Double.toString(x) + " " + Double.toString(y));
-		for(int i=0; i<rois.size(); i++) {
-			if(!done[i] && rois.get(i).hit(x, y)) {
-				done[i] = true;
-				countMatch ++;
-				if(!checkDone()) {
-					show("CORRECT!", 300);
-					return;
+		if(event.getAction() == MotionEvent.ACTION_UP){ 
+			for(int i=0; i<rois.size(); i++) {
+				if(!done[i] && rois.get(i).hit(x, y)) {
+					done[i] = true;
+					countMatch ++;
+					if(!checkDone()) {
+						show("CORRECT!", 300);
+						return;
+					}
 				}
 			}
 		}

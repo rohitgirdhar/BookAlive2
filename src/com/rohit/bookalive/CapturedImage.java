@@ -18,14 +18,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
+import android.view.MotionEvent;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 
 public class CapturedImage {
@@ -136,7 +133,7 @@ public class CapturedImage {
 	}
 	
 	// TODO remove this static int c = 0;
-	public void getTouch(Context context, float x, float y) {
+	public void getTouch(Context context, float x, float y, MotionEvent event) {
 		// TODO remoe thisLog.v(TAG, "touched "+ Integer.toString(c)); c++;
 		/* Function to handle touch input to image */
 		//Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
@@ -144,7 +141,7 @@ public class CapturedImage {
 		if(asking) {
 			Point p = new Point(x,y);
 			p = mapPointToOrig(p);
-			q.clicked(p.x, p.y);
+			q.clicked(p.x, p.y, event);
 			if(q.checkDone()) {
 				asking = false;
 				showTip(context);

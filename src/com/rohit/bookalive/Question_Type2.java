@@ -5,13 +5,13 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.opencv.core.Mat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.util.Log;
+import android.view.MotionEvent;
 
 public class Question_Type2 extends Question {
 	RegionOfInterest roi;
@@ -21,6 +21,9 @@ public class Question_Type2 extends Question {
 	private final int MAX_POINTS = 4;
 	private double[] px = new double[MAX_POINTS], py = new double[MAX_POINTS];
 	private int gotPoints = 0;
+	
+	private boolean touchDown = false;
+	private double downX = 0, downY = 0;
 	
 	@Override
 	public void read() {
@@ -75,20 +78,24 @@ public class Question_Type2 extends Question {
 	}
 
 	@Override
-	public void clicked(double x, double y) {
-		if(gotPoints == 0) capImg.revertImage();
-		px[gotPoints] = x; py[gotPoints] = y;
-		gotPoints ++;
-		draw();
-		if(gotPoints == MAX_POINTS) {
-			Polygon test = new Polygon(px, py, gotPoints);
-			if(roi.P.overlap(test) > 0.7) {
+	public void clicked(double x, double y, MotionEvent event) {
+		if( event.getAction() == MotionEvent.ACTION_UP && touchDown == true ) {
+			double minX = Math.min(x, downX), minY = Math.min(y,  downY);
+			double maxX = Math.max(x, downX), maxY = Math.max(y,  downY);
+			double[] px = new double[4], py = new double[4];
+			px[0] = minX; py[0] = minY;
+			px[1] = minX; py[1] = maxY;
+			px[2] = maxX; py[2] = maxY;
+			px[3] = maxX; py[3] = minY;
+			Polygon P = new Polygon(px, py, 4);
+			if(roi.P.overlap(P) > 0.7) {
 				done = true;
-				show("CORRECT", 1000);
 			} else {
-				show("NO! Try again",1000);
+				show("NO! Try Again", 1000);
 			}
-			gotPoints = 0;
+		} else if( event.getAction() == MotionEvent.ACTION_DOWN) {
+			touchDown = true;
+			downX = x; downY = y;
 		}
 	}
 
