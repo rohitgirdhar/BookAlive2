@@ -28,7 +28,6 @@ public class Question_Type1 extends Question {
 	
 	public void read() {
 		/* Reads the question from file */
-		Log.v(TAG, qfname);
 		try {
 			File f = new File(qfname);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -66,13 +65,13 @@ public class Question_Type1 extends Question {
 		
 	}
 	
-	public void draw(CapturedImage I) {
+	public void draw() {
 		Log.v(TAG, Double.toString(rois.get(0).P.polyX[1]));
 		for(int i=0; i<rois.size(); i++) {
-			I.drawLine(rois.get(i).P.polyX[0], rois.get(i).P.polyY[0], rois.get(i).P.polyX[1], rois.get(i).P.polyY[1]);
-			I.drawLine(rois.get(i).P.polyX[1], rois.get(i).P.polyY[1], rois.get(i).P.polyX[2], rois.get(i).P.polyY[2]);
-			I.drawLine(rois.get(i).P.polyX[2], rois.get(i).P.polyY[2], rois.get(i).P.polyX[3], rois.get(i).P.polyY[3]);
-			I.drawLine(rois.get(i).P.polyX[3], rois.get(i).P.polyY[3], rois.get(i).P.polyX[0], rois.get(i).P.polyY[0]);
+			capImg.drawLine(rois.get(i).P.polyX[0], rois.get(i).P.polyY[0], rois.get(i).P.polyX[1], rois.get(i).P.polyY[1]);
+			capImg.drawLine(rois.get(i).P.polyX[1], rois.get(i).P.polyY[1], rois.get(i).P.polyX[2], rois.get(i).P.polyY[2]);
+			capImg.drawLine(rois.get(i).P.polyX[2], rois.get(i).P.polyY[2], rois.get(i).P.polyX[3], rois.get(i).P.polyY[3]);
+			capImg.drawLine(rois.get(i).P.polyX[3], rois.get(i).P.polyY[3], rois.get(i).P.polyX[0], rois.get(i).P.polyY[0]);
 		}
 	}
 	
@@ -84,16 +83,16 @@ public class Question_Type1 extends Question {
 				done[i] = true;
 				countMatch ++;
 				if(!checkDone()) {
-					show("CORRECT!");
+					show("CORRECT!", 300);
 					return;
 				}
 			}
 		}
-		show("NO! Try again!");
+		show("NO! Try again!", 300);
 	}
 	
 	public boolean checkDone() {
 		if(countMatch == rois.size()) return true;
 		else return false;
-	}
+	}	
 };

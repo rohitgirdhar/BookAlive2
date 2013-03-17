@@ -21,11 +21,12 @@ public abstract class Question {
 	public String qsText = "";
 	public String qfname = "";
 	public Context context;
+	public CapturedImage capImg;		// to store the captured image to redraw (eg, in q2)
 	int qtype = 0;
 	
 	private final String TAG = "Question";
 	
-	public Question readType(String fname) {
+	public Question readType(String fname, CapturedImage c) {
 		String stor_qfname = fname;
 		String stor_tipText = null, stor_qsText = null;
 		int stor_qtype = 0;
@@ -45,18 +46,27 @@ public abstract class Question {
 			e.printStackTrace();
 		}
 		
-		Question q1 = null;
+		Question qret = null;
 		if(stor_qtype == 1) {
-			q1 = new Question_Type1();
-			q1.qfname = stor_qfname;
-			q1.qsText = stor_qsText;
-			q1.qtype = stor_qtype;
-			q1.tipText = stor_tipText;
-			((Question_Type1) q1).read();
+			qret = new Question_Type1();
+			qret.qfname = stor_qfname;
+			qret.qsText = stor_qsText;
+			qret.qtype = stor_qtype;
+			qret.tipText = stor_tipText;
+			qret.capImg = c;
+			((Question_Type1) qret).read();
+		} else if(stor_qtype == 2) {
+			qret = new Question_Type2();
+			qret.qfname = stor_qfname;
+			qret.qsText = stor_qsText;
+			qret.qtype = stor_qtype;
+			qret.tipText = stor_tipText;
+			qret.capImg = c;
+			((Question_Type2) qret).read();
 		} else {
 			throw new IllegalArgumentException("Invalid Question Type");
 		}
-		return q1;
+		return qret;
 	}
 	
 	public void ask(Context context) {
@@ -86,7 +96,7 @@ public abstract class Question {
 		alert.show();
 	}
 	
-	protected void show(String inp) {
+	protected void show(String inp, int time_ms) {
 		final Toast t = Toast.makeText(context, inp, Toast.LENGTH_SHORT);
 		t.show();
 		// Show toast for shorter time
@@ -96,10 +106,11 @@ public abstract class Question {
            public void run() {
                t.cancel(); 
            }
-        }, 300);	// to show for 300 ms
+        }, time_ms);	// to show for time_ms
 	}
 	
-	abstract public void draw(CapturedImage capturedImage);
+	abstract public void read();
+	abstract public void draw();
 	abstract public void clicked(double x, double y);
 	abstract public boolean checkDone();
 }

@@ -26,6 +26,8 @@ public class Question_Type2 extends Question {
 	public void read() {
 		try {
 			File f = new File(qfname);
+			double[] px = new double[MAX_POINTS];
+			double[] py = new double[MAX_POINTS];
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(f);
@@ -55,14 +57,14 @@ public class Question_Type2 extends Question {
 	@Override
 	public void draw() {
 		
-		/*
+		Log.v(TAG, "draw called, pts : " + Integer.toString(gotPoints));
 		// TODO remove this, temp for now, key location
 		
 			capImg.drawLine(roi.P.polyX[0], roi.P.polyY[0], roi.P.polyX[1], roi.P.polyY[1]);
 			capImg.drawLine(roi.P.polyX[1], roi.P.polyY[1], roi.P.polyX[2], roi.P.polyY[2]);
 			capImg.drawLine(roi.P.polyX[2], roi.P.polyY[2], roi.P.polyX[3], roi.P.polyY[3]);
 			capImg.drawLine(roi.P.polyX[3], roi.P.polyY[3], roi.P.polyX[0], roi.P.polyY[0]);
-		*/
+		
 		
 		// Draw between last 2 points
 		if(gotPoints < 2) return;

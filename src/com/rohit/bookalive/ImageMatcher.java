@@ -10,6 +10,6 @@ public class ImageMatcher {
 	
 	public static int match(Mat given) {
 		// TODO : FOR NOW, simply return a standard page number
-		return 5;
+		return 6;
 	}
 }

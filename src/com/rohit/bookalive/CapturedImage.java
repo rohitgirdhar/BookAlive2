@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 public class CapturedImage {
 	private Mat 	image;
+	private Mat 	backup_image;
 	private Mat 	orig;	// the original db image of the same page
 	private Mat		H;		// homography matrix orig to image, i.e. Hx will give pt on original image
 	private final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
@@ -55,6 +56,7 @@ public class CapturedImage {
 		
 	public void processIntentResult() {
 		image = Highgui.imread(STOR_PATH);
+		backup_image = image.clone();
 		matchingPage = ImageMatcher.match(image);
 		readPageImage();
 		H = new Mat();
@@ -71,17 +73,17 @@ public class CapturedImage {
 	private void getQuestion() {
 		// get the question type, make object, from the meta file
 		String fname = QS_STOR + Integer.toString(matchingPage) + ".xml";
-		q = q.readType(fname);
+		q = q.readType(fname, this);
 	}
 	
 	public void drawTemp() {
 		// TODO remove this fun
-		q.draw(this);
+		q.draw();
 	}
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test1.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test6.jpg";
 		processIntentResult();
 	}
 	
@@ -95,6 +97,7 @@ public class CapturedImage {
 		Log.i(TAG, Double.toString(p.x)+ " " + Double.toString(p.y)); 
 		Log.i(TAG, Double.toString(p2.x)+ " " + Double.toString(p2.y)); 
 		Core.line(image, p, p2, new Scalar(255,0,0),3);
+		updateImage();
 	}	
 	
 	public void processHomography() {
@@ -103,6 +106,12 @@ public class CapturedImage {
 	
 	public void setImageView(ImageView mImageView) {
 		imageView = mImageView;
+		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
+		Utils.matToBitmap(image, bmp);
+		imageView.setImageBitmap(bmp);
+	}
+	
+	public void updateImage() {
 		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(image, bmp);
 		imageView.setImageBitmap(bmp);
@@ -181,6 +190,14 @@ public class CapturedImage {
         } catch (Exception e) {
             e.printStackTrace();
         }
+	}
+	
+	/*
+	 * Reverts the image to the original image
+	 */
+	public void revertImage() {
+		image = backup_image.clone();
+		updateImage();
 	}
 	
 	public native void computeHomography(long addrOrig, long addrImage, long addrH);
