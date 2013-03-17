@@ -12,7 +12,9 @@ import org.w3c.dom.Node;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 public abstract class Question {
 	public String tipText = ""; 
@@ -82,6 +84,19 @@ public abstract class Question {
 		});
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+	
+	protected void show(String inp) {
+		final Toast t = Toast.makeText(context, inp, Toast.LENGTH_SHORT);
+		t.show();
+		// Show toast for shorter time
+		Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               t.cancel(); 
+           }
+        }, 300);	// to show for 300 ms
 	}
 	
 	abstract public void draw(CapturedImage capturedImage);

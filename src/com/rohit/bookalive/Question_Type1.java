@@ -85,24 +85,11 @@ public class Question_Type1 extends Question {
 				countMatch ++;
 				if(!checkDone()) {
 					show("CORRECT!");
+					return;
 				}
-				break;
 			}
 		}
 		show("NO! Try again!");
-	}
-	
-	private void show(String inp) {
-		final Toast t = Toast.makeText(context, inp, Toast.LENGTH_SHORT);
-		t.show();
-		// Show toast for shorter time
-		Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-           @Override
-           public void run() {
-               t.cancel(); 
-           }
-        }, 300);	// to show for 300 ms
 	}
 	
 	public boolean checkDone() {

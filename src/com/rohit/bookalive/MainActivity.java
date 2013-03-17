@@ -29,7 +29,9 @@ public class MainActivity extends Activity {
 		OnTouchListener l = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				img.getTouch(context, event.getX(), event.getY());
+				if(event.getAction() == MotionEvent.ACTION_UP) {
+					img.getTouch(context, event.getX(), event.getY());
+				}
 				return true;
 			}
 		};

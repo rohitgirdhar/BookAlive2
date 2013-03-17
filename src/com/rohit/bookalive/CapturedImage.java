@@ -126,7 +126,9 @@ public class CapturedImage {
 		return p;
 	}
 	
+	// TODO remove this static int c = 0;
 	public void getTouch(Context context, float x, float y) {
+		// TODO remoe thisLog.v(TAG, "touched "+ Integer.toString(c)); c++;
 		/* Function to handle touch input to image */
 		//Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
 		//t.show();
