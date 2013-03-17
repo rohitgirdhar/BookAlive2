@@ -38,12 +38,13 @@ public class CapturedImage {
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
 	private boolean asking = false;		// True when asking the question for this image
-	ImageView imageView = null; 			// storing, to use later to find size ratios for clicks
+	SplImageView imageView = null; 			// storing, to use later to find size ratios for clicks
 	private int matchingPage = 1;
-	
+	private Context context;				// store once, when making capture intent
 	private Question q = new Question_Type1();
 	
 	public Intent createCaptureIntent(Context context) {
+		this.context = context;
 		File photo = new File(STOR_PATH); photo.delete();
 		Uri photoUri = Uri.fromFile(photo);
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -101,7 +102,7 @@ public class CapturedImage {
 		computeHomography(image.getNativeObjAddr(), orig.getNativeObjAddr(), H.getNativeObjAddr());
 	}
 	
-	public void setImageView(ImageView mImageView) {
+	public void setImageView(SplImageView mImageView) {
 		imageView = mImageView;
 		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
 		Utils.matToBitmap(image, bmp);
@@ -114,9 +115,8 @@ public class CapturedImage {
 		imageView.setImageBitmap(bmp);
 	}
 	
-	public void ask(Context context) {
+	public void ask() {
 		/* Function to ask the question for this image */
-		// TODO For now, just Question Type 1 and asks
 		asking = true;
 		q.ask(context);
 	}
@@ -133,23 +133,25 @@ public class CapturedImage {
 	}
 	
 	// TODO remove this static int c = 0;
-	public void getTouch(Context context, float x, float y, MotionEvent event) {
+	public void getTouch(MotionEvent event) {
 		// TODO remoe thisLog.v(TAG, "touched "+ Integer.toString(c)); c++;
 		/* Function to handle touch input to image */
 		//Toast t = Toast.makeText(context, "Touched at " + Double.toString(x) + " " + Double.toString(y), Toast.LENGTH_SHORT);
 		//t.show();
+		double x = event.getX();
+		double y = event.getY();
 		if(asking) {
 			Point p = new Point(x,y);
 			p = mapPointToOrig(p);
 			q.clicked(p.x, p.y, event);
 			if(q.checkDone()) {
 				asking = false;
-				showTip(context);
+				showTip();
 			}
 		}
 	}
 	
-	private void showTip(Context context) {
+	private void showTip() {
 		q.showTip(context);
 	}
 	

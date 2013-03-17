@@ -17,24 +17,28 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private CapturedImage img;
 	private final int CAPTURE_INTENT = 1;
-	private ImageView mImageView;
+	private SplImageView mImageView;
 	Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mImageView = (ImageView) findViewById(R.id.imageViewMain);
+		mImageView = (SplImageView) findViewById(R.id.imageViewMain);
+		
+		
 		context = this;
+		/*
 		OnTouchListener l = new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				
 				img.getTouch(context, event.getX(), event.getY(), event);
 				return true;
 			}
 		};
 		mImageView.setOnTouchListener(l);
-		
+		*/
 		startCapture();
 	}
 
@@ -47,8 +51,8 @@ public class MainActivity extends Activity {
 
 	private void startCapture() {
 		img = new CapturedImage();
+		mImageView.setCapImg(img);
 		Intent captureIntent = img.createCaptureIntent(this);
-
 		startActivityForResult(Intent.createChooser(captureIntent, "Click Picture"), CAPTURE_INTENT);
 	}
 	
@@ -63,7 +67,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void askQuestion() {
-		img.ask(this);
+		img.ask();
 		img.drawTemp();
 		//img.drawLine(121, 221, 133, 186);
 		//img.drawLine(171, 189, 133, 186);

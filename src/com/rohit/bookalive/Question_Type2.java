@@ -79,9 +79,9 @@ public class Question_Type2 extends Question {
 
 	@Override
 	public void clicked(double x, double y, MotionEvent event) {
+		double minX = Math.min(x, downX), minY = Math.min(y,  downY);
+		double maxX = Math.max(x, downX), maxY = Math.max(y,  downY);
 		if( event.getAction() == MotionEvent.ACTION_UP && touchDown == true ) {
-			double minX = Math.min(x, downX), minY = Math.min(y,  downY);
-			double maxX = Math.max(x, downX), maxY = Math.max(y,  downY);
 			double[] px = new double[4], py = new double[4];
 			px[0] = minX; py[0] = minY;
 			px[1] = minX; py[1] = maxY;
@@ -93,9 +93,13 @@ public class Question_Type2 extends Question {
 			} else {
 				show("NO! Try Again", 1000);
 			}
+			capImg.imageView.stopOverlay();
 		} else if( event.getAction() == MotionEvent.ACTION_DOWN) {
 			touchDown = true;
 			downX = x; downY = y;
+			capImg.imageView.startOverlay();
+		} else if( event.getAction() == MotionEvent.ACTION_MOVE && touchDown == true) {
+			capImg.imageView.setCoords(minX, minY, maxX, maxY);
 		}
 	}
 
