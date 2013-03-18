@@ -80,7 +80,7 @@ public class Question_Type1 extends Question {
 					done[i] = true;
 					countMatch ++;
 					if(!checkDone()) {
-						show("CORRECT!", 300);
+						show("CORRECT!", 600);
 						return;
 					}
 				}
