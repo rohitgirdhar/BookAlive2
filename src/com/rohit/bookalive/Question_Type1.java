@@ -74,7 +74,7 @@ public class Question_Type1 extends Question {
 		
 	public void clicked(double x, double y, MotionEvent event) {
 		//show("CLicked at: " + Double.toString(x) + " " + Double.toString(y));
-		if(event.getAction() == MotionEvent.ACTION_UP){ 
+		if(event.getAction() == MotionEvent.ACTION_UP){
 			for(int i=0; i<rois.size(); i++) {
 				if(!done[i] && rois.get(i).hit(x, y)) {
 					done[i] = true;
@@ -85,8 +85,9 @@ public class Question_Type1 extends Question {
 					}
 				}
 			}
+			show("NO! Try again!", 300);
 		}
-		show("NO! Try again!", 300);
+		
 	}
 	
 	public boolean checkDone() {
