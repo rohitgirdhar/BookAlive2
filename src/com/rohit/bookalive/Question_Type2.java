@@ -24,6 +24,7 @@ public class Question_Type2 extends Question {
 	
 	private boolean touchDown = false;
 	private double downX = 0, downY = 0;
+	private MotionEvent downEvent = null;
 	
 	@Override
 	public void read() {
@@ -79,6 +80,8 @@ public class Question_Type2 extends Question {
 
 	@Override
 	public void clicked(double x, double y, MotionEvent event) {
+		
+		// note, x,y are wrt original image, event is the original event
 		double minX = Math.min(x, downX), minY = Math.min(y,  downY);
 		double maxX = Math.max(x, downX), maxY = Math.max(y,  downY);
 		if( event.getAction() == MotionEvent.ACTION_UP && touchDown == true ) {
@@ -98,8 +101,9 @@ public class Question_Type2 extends Question {
 			touchDown = true;
 			downX = x; downY = y;
 			capImg.imageView.startOverlay();
+			downEvent = MotionEvent.obtain(event);
 		} else if( event.getAction() == MotionEvent.ACTION_MOVE && touchDown == true) {
-			capImg.imageView.setCoords(minX, minY, maxX, maxY);
+			capImg.imageView.setCoords(downEvent, event);
 		}
 	}
 
