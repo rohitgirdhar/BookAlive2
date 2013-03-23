@@ -92,8 +92,8 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO, remove comment
-			// img.processIntentResult();
-			img.processDev();
+			 img.processIntentResult();
+			//img.processDev();
 			return null;
 		}
 		

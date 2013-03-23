@@ -9,7 +9,9 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +56,8 @@ public class CapturedImage {
 		
 	public void processIntentResult() {
 		image = Highgui.imread(STOR_PATH);
+		Imgproc.resize(image, image, new Size((double)640.0, (double)640.0*image.rows()/image.cols()));
+		Highgui.imwrite(STOR_PATH, image);	
 		backup_image = image.clone();
 		matchingPage = ImageMatcher.match(image);
 		readPageImage();
@@ -81,7 +85,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test6.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test7.jpg";
 		processIntentResult();
 	}
 	
