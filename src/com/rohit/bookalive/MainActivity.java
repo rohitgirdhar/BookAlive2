@@ -60,10 +60,14 @@ public class MainActivity extends Activity {
 		// TODO : For now, override checks and call process, for dev, change back
 	//	if(requestCode == CAPTURE_INTENT && resultCode == RESULT_OK) {
 //			img.processIntentResult();
-			img.processDev();
-			img.setImageView(mImageView);
-			new ComputeHomographyTask().execute();
+			new ImageMatchTask().execute();
+			
 	//	}
+	}
+	
+	protected void computeHomo() {
+		img.setImageView(mImageView);
+		new ComputeHomographyTask().execute();
 	}
 	
 	private void askQuestion() {
@@ -75,6 +79,30 @@ public class MainActivity extends Activity {
 		//img.drawLine(121, 221, 168, 224);
 		img.setImageView(mImageView);
 	}
+	
+	private class ImageMatchTask extends AsyncTask<Void, Void, Void> {
+		private ProgressBar pbar;
+		
+		@Override
+		protected void onPreExecute() {
+			pbar = (ProgressBar) findViewById(R.id.progBar);			
+			pbar.setVisibility(View.VISIBLE);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO, remove comment
+			// img.processIntentResult();
+			img.processDev();
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void param) {
+			pbar.setVisibility(View.INVISIBLE);
+			computeHomo();
+		}
+	};
 	
 	private class ComputeHomographyTask extends AsyncTask<Void, Void, Void> {
 		private ProgressBar pbar;
