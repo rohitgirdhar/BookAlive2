@@ -190,13 +190,12 @@ JNIEXPORT jint JNICALL Java_com_rohit_bookalive_ImageMatcher_getPageNum(JNIEnv*,
     fs.release();
     
     Mat& test = *(Mat*)addrTest;
-    Ptr<FeatureDetector> det = FeatureDetector::create("ORB");
-    Ptr<DescriptorExtractor> ext = DescriptorExtractor::create("ORB");
+    // Using a ORB detector with less keypoints to work faster
+    ORB de = ORB(100);          // Train using 100 keypoints (Offline/train.cpp)
 
     vector<KeyPoint> kp;
     Mat desc;
-    det->detect(test, kp);
-    ext->compute(test, kp, desc);
+    de(test, Mat(), kp, desc);
     vector<int> visual_words = computeVisualWords(desc, vocab);
     vector<int> hist = computeHist(visual_words, vocab.rows);
     Mat temp = Mat(hist);

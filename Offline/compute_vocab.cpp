@@ -16,6 +16,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
+
+#define NUM_CLUSTER 200
+
 using namespace std;
 using namespace cv;
 
@@ -60,7 +63,7 @@ int main() {
 	fs << "training_descriptors" << train_descs;
 	fs.release();
 
-	BOWKMeansTrainer bowtrainer(1000); // num of clusters
+	BOWKMeansTrainer bowtrainer(NUM_CLUSTER); // num of clusters
 	bowtrainer.add(train_descs);
 	cout<<"Cluster BOW features"<<endl;
 	Mat vocab = bowtrainer.cluster();
