@@ -18,13 +18,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 
 public class CapturedImage {
@@ -108,9 +108,8 @@ public class CapturedImage {
 	
 	public void setImageView(SplImageView mImageView) {
 		imageView = mImageView;
-		Bitmap bmp = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
-		Utils.matToBitmap(image, bmp);
-		imageView.setImageBitmap(bmp);
+		File filePath = new File(STOR_PATH);
+		imageView.setImageDrawable(Drawable.createFromPath(filePath.toString()));
 	}
 	
 	public void updateImage() {
