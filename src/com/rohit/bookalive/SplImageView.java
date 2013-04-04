@@ -38,6 +38,7 @@ public class SplImageView extends ImageView {
 	
 	public void stopOverlay() {
 		overlay = false;
+		invalidate();
 	}
 	
 	public void setCoords(MotionEvent down, MotionEvent up) {

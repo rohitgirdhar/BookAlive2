@@ -32,18 +32,27 @@ public class CapturedImage {
 	private Mat 	backup_image;
 	private Mat 	orig;	// the original db image of the same page
 	private Mat		H;		// homography matrix orig to image, i.e. Hx will give pt on original image
-	private final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
-	private final String ROOT_PATH = SD_CARD_PATH + "/Pictures/BookAlive/";
+	private static final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
+	public static final String ROOT_PATH = SD_CARD_PATH + "/Pictures/BookAlive/";
 	private String STOR_PATH 	= ROOT_PATH + "test.jpg";
 	private final String PAGES_STOR = ROOT_PATH + "Pages/";
 	private final String QS_STOR = ROOT_PATH + "Ques/";
 	private final int CAPTURE_IMAGE 	= 1;
 	private final static String TAG = "CapturedImage";
-	private boolean asking = false;		// True when asking the question for this image
+	
 	SplImageView imageView = null; 			// storing, to use later to find size ratios for clicks
 	private int matchingPage = 1;
 	private Context context;				// store once, when making capture intent
 	private Question q = new Question_Type1();
+	
+	// Modes
+	private final int NONE = 0;
+	private final int ASK = 1;
+	private final int INFO = 2;
+	private final int READ = 3;
+	private int mode = NONE;
+	
+	Information info = null;
 	
 	public Intent createCaptureIntent(Context context) {
 		this.context = context;
@@ -63,6 +72,7 @@ public class CapturedImage {
 		readPageImage();
 		H = new Mat();
 		getQuestion();
+		getInformation();
 	}
 	
 	private void readPageImage() {
@@ -78,6 +88,10 @@ public class CapturedImage {
 		q = q.readType(fname, this);
 	}
 	
+	private void getInformation() {
+		info = new Information(matchingPage, context);
+	}
+	
 	public void drawTemp() {
 		// TODO remove this fun
 		q.draw();
@@ -85,7 +99,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test7.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test42.jpg";
 		processIntentResult();
 	}
 	
@@ -120,7 +134,7 @@ public class CapturedImage {
 	
 	public void ask() {
 		/* Function to ask the question for this image */
-		asking = true;
+		mode = ASK;
 		q.ask(context);
 	}
 	
@@ -143,14 +157,16 @@ public class CapturedImage {
 		//t.show();
 		double x = event.getX();
 		double y = event.getY();
-		if(asking) {
-			Point p = new Point(x,y);
-			p = mapPointToOrig(p);
+		Point p = new Point(x,y);
+		p = mapPointToOrig(p);
+		if(mode == ASK) {
 			q.clicked(p.x, p.y, event);
 			if(q.checkDone()) {
-				asking = false;
 				showTip();
+				mode = INFO;
 			}
+		} else if(mode == INFO) {
+			info.clicked(p.x, p.y, event);
 		}
 	}
 	

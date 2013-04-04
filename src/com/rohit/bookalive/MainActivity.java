@@ -26,19 +26,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mImageView = (SplImageView) findViewById(R.id.imageViewMain);
 		
-		
 		context = this;
-		/*
-		OnTouchListener l = new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				
-				img.getTouch(context, event.getX(), event.getY(), event);
-				return true;
-			}
-		};
-		mImageView.setOnTouchListener(l);
-		*/
 		startCapture();
 	}
 
@@ -92,8 +80,8 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO, remove comment
-			 img.processIntentResult();
-			//img.processDev();
+			// img.processIntentResult();
+			img.processDev();
 			return null;
 		}
 		

@@ -109,6 +109,7 @@ public class Question_Type2 extends Question {
 
 	@Override
 	public boolean checkDone() {
+		if(done) capImg.imageView.stopOverlay();
 		return done;
 	}
 }
