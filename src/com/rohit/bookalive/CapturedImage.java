@@ -13,11 +13,13 @@ import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -25,13 +27,16 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 
 public class CapturedImage {
 	private Mat 	image;
 	private Mat 	backup_image;
 	private Mat 	orig;	// the original db image of the same page
-	private Mat		H;		// homography matrix orig to image, i.e. Hx will give pt on original image
+	public static Mat	H;		// homography matrix orig to image, i.e. Hx will give pt on original image
 	private static final String SD_CARD_PATH 	= Environment.getExternalStorageDirectory().toString();
 	public static final String ROOT_PATH = SD_CARD_PATH + "/Pictures/BookAlive/";
 	private String STOR_PATH 	= ROOT_PATH + "test.jpg";
@@ -41,9 +46,12 @@ public class CapturedImage {
 	private final static String TAG = "CapturedImage";
 	
 	SplImageView imageView = null; 			// storing, to use later to find size ratios for clicks
+	RelativeLayout layout = null;
 	private int matchingPage = 1;
 	private Context context;				// store once, when making capture intent
 	private Question q = new Question_Type1();
+	
+	Animator animator;
 	
 	// Modes
 	private final int NONE = 0;
@@ -53,6 +61,11 @@ public class CapturedImage {
 	private int mode = NONE;
 	
 	Information info = null;
+	
+	public CapturedImage(SplImageView mImageView, RelativeLayout mLayout) {
+		imageView = mImageView;
+		layout = mLayout;
+	}
 	
 	public Intent createCaptureIntent(Context context) {
 		this.context = context;
@@ -99,7 +112,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test42.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test5.jpg";
 		processIntentResult();
 	}
 	
@@ -114,14 +127,31 @@ public class CapturedImage {
 		Log.i(TAG, Double.toString(p2.x)+ " " + Double.toString(p2.y)); 
 		Core.line(image, p, p2, new Scalar(255,0,0),3);
 		updateImage();
-	}	
+	}
+	
+	public void drawAnimation() {
+		animator = new Animator(layout, context, matchingPage);
+		animator.animate();	
+		/*
+		ImageView anime = new ImageView(context);
+		anime.setVisibility(View.VISIBLE);
+		anime.setBackgroundResource(R.drawable.anime_fire);
+		AnimationDrawable frameAnime = (AnimationDrawable) anime.getBackground();
+		RelativeLayout.LayoutParams animParams = new RelativeLayout.LayoutParams(50, 100);
+		animParams.width = 120;
+		animParams.topMargin = 200;
+		animParams.leftMargin = 200;
+		anime.setLayoutParams(animParams);	
+		layout.addView(anime);
+		frameAnime.start();
+		*/
+	}
 	
 	public void processHomography() {
 		computeHomography(image.getNativeObjAddr(), orig.getNativeObjAddr(), H.getNativeObjAddr());
 	}
 	
-	public void setImageView(SplImageView mImageView) {
-		imageView = mImageView;
+	public void setImageView() {
 		File filePath = new File(STOR_PATH);
 		imageView.setImageDrawable(Drawable.createFromPath(filePath.toString()));
 	}
@@ -164,6 +194,7 @@ public class CapturedImage {
 			if(q.checkDone()) {
 				showTip();
 				mode = INFO;
+				drawAnimation();
 			}
 		} else if(mode == INFO) {
 			info.clicked(p.x, p.y, event);

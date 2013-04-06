@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends Activity {
 	
@@ -18,6 +19,7 @@ public class MainActivity extends Activity {
 	private CapturedImage img;
 	private final int CAPTURE_INTENT = 1;
 	private SplImageView mImageView;
+	private RelativeLayout mLayout;
 	Context context;
 	
 	@Override
@@ -25,7 +27,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mImageView = (SplImageView) findViewById(R.id.imageViewMain);
-		
+		mLayout = (RelativeLayout) findViewById(R.id.layoutMain);
 		context = this;
 		startCapture();
 	}
@@ -38,7 +40,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void startCapture() {
-		img = new CapturedImage();
+		img = new CapturedImage(mImageView, mLayout);
 		mImageView.setCapImg(img);
 		Intent captureIntent = img.createCaptureIntent(this);
 		startActivityForResult(Intent.createChooser(captureIntent, "Click Picture"), CAPTURE_INTENT);
@@ -54,7 +56,7 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void computeHomo() {
-		img.setImageView(mImageView);
+		img.setImageView();
 		new ComputeHomographyTask().execute();
 	}
 	
@@ -65,7 +67,7 @@ public class MainActivity extends Activity {
 		//img.drawLine(171, 189, 133, 186);
 		//img.drawLine(171, 189, 168, 224);
 		//img.drawLine(121, 221, 168, 224);
-		img.setImageView(mImageView);
+		img.setImageView();
 	}
 	
 	private class ImageMatchTask extends AsyncTask<Void, Void, Void> {
@@ -80,7 +82,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO, remove comment
-			// img.processIntentResult();
+			//img.processIntentResult();
 			img.processDev();
 			return null;
 		}
