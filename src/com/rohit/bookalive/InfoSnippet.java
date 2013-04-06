@@ -55,11 +55,12 @@ public class InfoSnippet {
 		builder.setMessage(text_info)
 		.setNeutralButton("ReadOut!", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				
+				// On show listener defined below to prevent closing of dialog on click here
 			}
 		})
 		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
+				tts.stop();
 				dialog.cancel();
 			}
 		});
