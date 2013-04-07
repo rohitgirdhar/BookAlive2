@@ -23,7 +23,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>' >> $xmlfile
 echo '<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">' >> $xmlfile
 for (( i=0; i<=${nframes}; i++ ))
 do
-    echo '<item android:drawable="@drawable/anime_explode_'$i'" android:duration="50" />' >> $xmlfile
+    echo '<item android:drawable="@drawable/anime_'${filename}'_'$i'" android:duration="50" />' >> $xmlfile
 done
 
 echo '</animation-list>' >> $xmlfile
