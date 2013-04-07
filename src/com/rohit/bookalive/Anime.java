@@ -31,6 +31,8 @@ public class Anime {
 		anime.setVisibility(View.VISIBLE);
 		if(type.equals("fire")) {
 			anime.setBackgroundResource(R.drawable.anime_fire);
+		} else if(type.equals("explode")) {
+			anime.setBackgroundResource(R.drawable.anime_explode);
 		} else {
 			throw new IllegalArgumentException("Invalid Anime Type : " + type);
 		}
@@ -38,8 +40,8 @@ public class Anime {
 		RelativeLayout.LayoutParams animParams = new RelativeLayout.LayoutParams((int)wd, (int)ht);
 		Point p = new Point(tlx, tly);
 		Util.getPointOnOrig(CapturedImage.H.inv(), p);
-		animParams.topMargin = (int) p.x;
-		animParams.leftMargin = (int) p.y;
+		animParams.topMargin = (int) p.y;
+		animParams.leftMargin = (int) p.x;
 		anime.setLayoutParams(animParams);	
 		relLayout.addView(anime);
 		frameAnime.start();
