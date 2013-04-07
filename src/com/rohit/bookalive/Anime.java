@@ -33,6 +33,8 @@ public class Anime {
 			anime.setBackgroundResource(R.drawable.anime_fire);
 		} else if(type.equals("explode")) {
 			anime.setBackgroundResource(R.drawable.anime_explode);
+		} else if(type.equals("smoke")) {
+			anime.setBackgroundResource(R.drawable.anime_smoke);
 		} else {
 			throw new IllegalArgumentException("Invalid Anime Type : " + type);
 		}

@@ -112,7 +112,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test5.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test32	.jpg";
 		processIntentResult();
 	}
 	
@@ -131,20 +131,7 @@ public class CapturedImage {
 	
 	public void drawAnimation() {
 		animator = new Animator(layout, context, matchingPage);
-		animator.animate();	
-		/*
-		ImageView anime = new ImageView(context);
-		anime.setVisibility(View.VISIBLE);
-		anime.setBackgroundResource(R.drawable.anime_fire);
-		AnimationDrawable frameAnime = (AnimationDrawable) anime.getBackground();
-		RelativeLayout.LayoutParams animParams = new RelativeLayout.LayoutParams(50, 100);
-		animParams.width = 120;
-		animParams.topMargin = 200;
-		animParams.leftMargin = 200;
-		anime.setLayoutParams(animParams);	
-		layout.addView(anime);
-		frameAnime.start();
-		*/
+		animator.animate();			
 	}
 	
 	public void processHomography() {
