@@ -112,7 +112,7 @@ public class CapturedImage {
 	
 	public void processDev() {
 		// TODO : Remove this function, only for development as a replacement for processIntentResult
-		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test32	.jpg";
+		STOR_PATH = SD_CARD_PATH + "/Pictures/BookAlive/" + "test42.jpg";
 		processIntentResult();
 	}
 	

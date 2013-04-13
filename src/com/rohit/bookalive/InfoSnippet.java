@@ -79,7 +79,7 @@ public class InfoSnippet {
 				
 			}
 		});
-		
+		alert.setCanceledOnTouchOutside(false);
 		alert.show();
 	}
 }

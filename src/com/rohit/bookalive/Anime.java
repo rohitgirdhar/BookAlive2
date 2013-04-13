@@ -8,17 +8,17 @@ import org.w3c.dom.Element;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public class Anime {
 	private static final String TAG = "Anime";
-	public String type;
-	public double tlx, tly;
-	public double wd, ht;
-	public boolean onclick = false;
+	private String type;
+	private double tlx, tly;
+	private double wd, ht;
+	private boolean onclick = false;
+	private int sound_res = -1;				// -1 => none
 	private RelativeLayout relLayout;
 	private Context context;
 	private AnimationDrawable frameAnime;
@@ -60,6 +60,7 @@ public class Anime {
 			animeView.setBackgroundResource(R.drawable.anime_fire);
 		} else if(type.equals("explode")) {
 			animeView.setBackgroundResource(R.drawable.anime_explode);
+			sound_res = R.raw.explode;
 		} else if(type.equals("smoke")) {
 			animeView.setBackgroundResource(R.drawable.anime_smoke);
 		} else {
@@ -74,8 +75,8 @@ public class Anime {
 		initAnimate();	
 		if(onclick) frameAnime.setOneShot(true);
 		frameAnime.start();
-		if(onclick) {
-			MediaPlayer mp = MediaPlayer.create(context, R.raw.explode);
+		if(onclick && sound_res != -1) {
+			MediaPlayer mp = MediaPlayer.create(context, sound_res);
 			mp.start();
 		}	
 	}
